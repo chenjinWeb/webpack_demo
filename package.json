@@ -1,0 +1,23 @@
+{
+  "name": "webpack_demo",
+  "version": "1.0.0",
+  "description": "webpack随便看看！",
+  "main": "index.js",
+  "dependencies": {
+    "webpack": "^3.6.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chenjinWeb/webpack_demo.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chenjinWeb/webpack_demo/issues"
+  },
+  "homepage": "https://github.com/chenjinWeb/webpack_demo#readme"
+}
