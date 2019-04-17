@@ -1,0 +1,10 @@
+body{
+    background-color: red;
+    color: white;
+}
+/*图片都是绝对路径*/
+#tupian{
+    background-image: url(../images/manhua.jpg);
+    width:466px;
+    height:453px;
+}
