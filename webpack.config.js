@@ -1,10 +1,11 @@
 
 const path = require('path');
+const glob = require('glob');
 
 const uglify = require('uglifyjs-webpack-plugin'); //压缩JS代码,webpack自带的插件
 const htmlPlugin = require('html-webpack-plugin'); //压缩HTML代码，
 const extractTextPlugin = require("extract-text-webpack-plugin");  //分离CSS代码
-
+const PurifyCSSPlugin = require('purifycss-webpack')
 
 var website ={
     publicPath:"http://192.168.100.103:1717"
@@ -28,10 +29,34 @@ module.exports = {
     module: {
         rules: [
             {
-                test:/.(css|less|scss)$/,
+                test:/.(css|scss)$/,
+                //extractTextPlugin.extract分离文件
                 use:extractTextPlugin.extract({
-                    use:['css-loader','less-loader','sass-loader','postcss-loader'],
+                    //css-loader:用来处理css文件中的url，import等操作的，一般配合style-loader使用
+                    //less-loader,sass-loader用来处理less，sass文件转换为css
+                    //postcss-loader用来处理css文件中的前缀-webkit-,-o-等等
+                    use:['css-loader','sass-loader',{
+                        loader:'postcss-loader',
+                        options:{           // 如果没有options这个选项将会报错 No PostCSS Config found
+                            plugins: (loader) => [
+                                require('autoprefixer')(), //CSS浏览器兼容
+                            ]
+                        }
+                    }],
                     fallback: 'style-loader'
+                })
+            },
+
+            {
+                test: /\.less$/,
+                use: extractTextPlugin.extract({
+                    use: [{
+                        loader: "css-loader"
+                    }, {
+                        loader: "less-loader"
+                    }],
+                    // use style-loader in development
+                    fallback: "style-loader"
                 })
             },
 
@@ -59,7 +84,7 @@ module.exports = {
     },
     //插件，用于生产模版和各项功能
     plugins: [
-        new uglify(),
+        new uglify(), //js压缩
         new htmlPlugin({
             //是对html文件进行压缩
             minify:{
@@ -69,7 +94,10 @@ module.exports = {
             template:'./src/index.html', //是要打包的html模版路径和文件名称。
             chunks:['entry'] //默认找entry下面所有的入口文件
         }),
-        new extractTextPlugin("/css/index.css")
+        new extractTextPlugin("/css/index.css"),  //CSS分离与图片路径处理
+        new PurifyCSSPlugin({
+            paths:glob.sync(path.join(__dirname,'src/*.html'))
+        })
     ],
     //配置webpack开发服务功能
     devServer: {

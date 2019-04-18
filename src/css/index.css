@@ -7,4 +7,5 @@ body{
     background-image: url(../images/manhua.jpg);
     width:466px;
     height:453px;
+    -webkit-flex: auto;
 }
